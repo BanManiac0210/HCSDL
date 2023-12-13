@@ -232,7 +232,7 @@ app.post("/admin/addDiscount", (req, res) => {
     q.input('id_category', sql.Int, nDiscount.id_category);
     q.input('dateStart', sql.Date, nDiscount.dateStart);
     q.input('dateEnd', sql.Date, nDiscount.dateEnd);
-    q.input('discountPercent', sql.Decimal, nDiscount.discountPercent);
+    q.input('discountPercent', sql.Decimal(3, 2), nDiscount.discountPercent);
     q.input('discountMoney', sql.Int, nDiscount.discountMoney);
     q.input('maxDiscount', sql.Int, nDiscount.maxDiscount);
     q.input('minBill', sql.Int, nDiscount.minBill);

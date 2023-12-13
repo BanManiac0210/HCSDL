@@ -73,12 +73,12 @@ app.get("/admin", async (req, res) => {
       });
       addData.forEach(ele => {
         if (element.id_user == ele.id_user){
-          element.email.push(ele.address);
+          element.address.push(ele.address);
         };
       });
       pNumData.forEach(ele => {
         if (element.id_user == ele.id_user){
-          element.email.push(ele.pNumber);
+          element.pNum.push(ele.pNumber);
         };
       });
     });
@@ -119,12 +119,12 @@ app.get("/admin/search/:name", async (req, res) => {
       });
       addData.forEach(ele => {
         if (element.id_user == ele.id_user){
-          element.email.push(ele.address);
+          element.address.push(ele.address);
         };
       });
       pNumData.forEach(ele => {
         if (element.id_user == ele.id_user){
-          element.email.push(ele.pNumber);
+          element.pNum.push(ele.pNumber);
         };
       });
     });
@@ -154,9 +154,9 @@ app.get("/admin/search/type/:ty", async (req, res) => {
     let addData = await selectAddressData();
     let pNumData = await selectPnumData();
     userData.forEach(element => {
+      element.email = [];
       element.address = [];
       element.pNum = []
-      element.email = [];
       emailData.forEach(ele => {
         if (element.id_user == ele.id_user){
           element.email.push(ele.email);
@@ -164,12 +164,12 @@ app.get("/admin/search/type/:ty", async (req, res) => {
       });
       addData.forEach(ele => {
         if (element.id_user == ele.id_user){
-          element.email.push(ele.address);
+          element.address.push(ele.address);
         };
       });
       pNumData.forEach(ele => {
         if (element.id_user == ele.id_user){
-          element.email.push(ele.pNumber);
+          element.pNum.push(ele.pNumber);
         };
       });
     });
@@ -211,12 +211,12 @@ app.get("/admin/search/:name/:ty", async (req, res) => {
       });
       addData.forEach(ele => {
         if (element.id_user == ele.id_user){
-          element.email.push(ele.address);
+          element.address.push(ele.address);
         };
       });
       pNumData.forEach(ele => {
         if (element.id_user == ele.id_user){
-          element.email.push(ele.pNumber);
+          element.pNum.push(ele.pNumber);
         };
       });
     });

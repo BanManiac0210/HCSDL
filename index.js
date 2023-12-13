@@ -1,11 +1,12 @@
-const express = require('express')
-const bodyParser = require("body-parser");
-const sql = require("mssql");
+const express = require('express');
+const bodyParser = require('body-parser');
+const sql = require('mssql');
 
-require("dotenv").config();
+require('dotenv').config();
+
 const database = require("./config/database");
 
-const pool = database.connect();
+database.connect();
 
 const app = express();
 const PORT = process.env.PORT;
@@ -13,18 +14,7 @@ const PORT = process.env.PORT;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Register
-// function fetchDataFromMySQL_bill(callback) {
-//   pool.getConnection((err, connection) => {
-//     if (err) {
-//       console.error("Error:", err);
-//       return callback(err, null);
-//     }
-
-//     connect.query("SELECT * FROM ")
-//   })
-// }
-
+////////////////////////////////// Admin ///////////////////////////
 var selectUserData = () => {
   return new Promise((resolve, reject) => {
     var q = new sql.Request();
@@ -45,16 +35,50 @@ var selectEmailData = () => {
   });
 };
 
+var selectAddressData = () => {
+  return new Promise((resolve, reject) => {
+    var q = new sql.Request();
+    q.query('select * from User_Address', (err, rc) => {
+      if (err) return reject(err);
+      else return resolve(rc.recordset);
+    });
+  });
+};
+
+var selectPnumData = () => {
+  return new Promise((resolve, reject) => {
+    var q = new sql.Request();
+    q.query('select * from User_Pnumber', (err, rc) => {
+      if (err) return reject(err);
+      else return resolve(rc.recordset);
+    });
+  });
+};
+
 app.get("/admin", async (req, res) => {
   try {
     let userData = await selectUserData();
     let emailData = await selectEmailData(); 
+    let addData = await selectAddressData();
+    let pNumData = await selectPnumData();
 
     userData.forEach(element => {
       element.email = [];
+      element.address = [];
+      element.pNum = []
       emailData.forEach(ele => {
         if (element.id_user == ele.id_user){
           element.email.push(ele.email);
+        };
+      });
+      addData.forEach(ele => {
+        if (element.id_user == ele.id_user){
+          element.email.push(ele.address);
+        };
+      });
+      pNumData.forEach(ele => {
+        if (element.id_user == ele.id_user){
+          element.email.push(ele.pNumber);
         };
       });
     });
@@ -81,12 +105,26 @@ app.get("/admin/search/:name", async (req, res) => {
     let name = req.params.name;
     let userData = await selectUserName(name);
     let emailData = await selectEmailData();
-    
+    let addData = await selectAddressData();
+    let pNumData = await selectPnumData();
+
     userData.forEach(element => {
       element.email = [];
+      element.address = [];
+      element.pNum = []
       emailData.forEach(ele => {
         if (element.id_user == ele.id_user){
           element.email.push(ele.email);
+        };
+      });
+      addData.forEach(ele => {
+        if (element.id_user == ele.id_user){
+          element.email.push(ele.address);
+        };
+      });
+      pNumData.forEach(ele => {
+        if (element.id_user == ele.id_user){
+          element.email.push(ele.pNumber);
         };
       });
     });
@@ -113,11 +151,25 @@ app.get("/admin/search/type/:ty", async (req, res) => {
     let ty = req.params.ty;
     let userData = await selectUserType(ty);
     let emailData = await selectEmailData();
+    let addData = await selectAddressData();
+    let pNumData = await selectPnumData();
     userData.forEach(element => {
+      element.address = [];
+      element.pNum = []
       element.email = [];
       emailData.forEach(ele => {
         if (element.id_user == ele.id_user){
           element.email.push(ele.email);
+        };
+      });
+      addData.forEach(ele => {
+        if (element.id_user == ele.id_user){
+          element.email.push(ele.address);
+        };
+      });
+      pNumData.forEach(ele => {
+        if (element.id_user == ele.id_user){
+          element.email.push(ele.pNumber);
         };
       });
     });
@@ -146,11 +198,25 @@ app.get("/admin/search/:name/:ty", async (req, res) => {
     let ty = req.params.ty;
     let userData = await selectUserIf(na, ty);
     let emailData = await selectEmailData();
+    let addData = await selectAddressData();
+    let pNumData = await selectPnumData();
     userData.forEach(element => {
+      element.address = [];
+      element.pNum = []
       element.email = [];
       emailData.forEach(ele => {
         if (element.id_user == ele.id_user){
           element.email.push(ele.email);
+        };
+      });
+      addData.forEach(ele => {
+        if (element.id_user == ele.id_user){
+          element.email.push(ele.address);
+        };
+      });
+      pNumData.forEach(ele => {
+        if (element.id_user == ele.id_user){
+          element.email.push(ele.pNumber);
         };
       });
     });
@@ -248,10 +314,12 @@ app.post("/admin/addDiscount", (req, res) => {
   };
 });
 
-app.get('/', (req, res)=>{ 
-  res.status(200); 
-  res.send("Welcome to root URL of Server"); 
-}); 
+////////////////////////////// End Admin ///////////////////////////
+
+app.get('/', (req, res) => {
+  res.status(200);
+  res.send('Welcome to the root URL of Server');
+});
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
